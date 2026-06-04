@@ -1,0 +1,7 @@
+.magic/
+.env
+*.DS_Store
+*.exe
+json_messages/
+*.out
+*.html
