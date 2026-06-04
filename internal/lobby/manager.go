@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Liphium/neoroute"
 	"github.com/google/uuid"
 )
 
@@ -16,7 +17,7 @@ type wrappedLobby struct {
 
 var lobbies = &sync.Map{} // map[string]*wrappedLobby
 
-func CreateLobby(sessionId string, name string) (string, string, string, string, string) {
+func CreateLobby(sessionId string, adapter neoroute.Adapter, name string) (string, string, string, string, string) {
 
 	if !isNameAllowed(name) {
 		return "", "", "", "", util.ErrInvalidName
@@ -40,16 +41,20 @@ func CreateLobby(sessionId string, name string) (string, string, string, string,
 
 	// Create lobby
 	l := &Lobby{
-		id:           id,
-		token:        uuid.NewString(),
-		phaseManager: phaseManager,
-		doneChan:     doneChan,
+		id:              id,
+		token:           uuid.NewString(),
+		phaseManager:    phaseManager,
+		doneChan:        doneChan,
+		adapterRegistry: neoroute.NewAdapterRegistry(),
 
 		players: make(map[string]*Player),
 	}
 
 	// Add initial player
-	p := l.addPlayer(l.newPlayerId(), sessionId, name)
+	p := l.addPlayer(l.newPlayerId(), name)
+
+	// Add player sessionId to adapter registry
+	l.adapterRegistry.Register(sessionId, adapter)
 
 	// Start phase manager
 	go phaseManager.RunEngine()

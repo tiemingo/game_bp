@@ -3,13 +3,16 @@ package lobby
 import (
 	"game_bp/internal/phase"
 	"game_bp/util"
+
+	"github.com/Liphium/neoroute"
 )
 
 type Lobby struct {
-	id           string              // Constant field
-	token        string              // Constant field
-	phaseManager *phase.PhaseManager // Constant field
-	doneChan     chan struct{}       // Constant field
+	id              string                    // Constant field
+	token           string                    // Constant field
+	phaseManager    *phase.PhaseManager       // Constant field
+	doneChan        chan struct{}             // Constant field
+	adapterRegistry *neoroute.AdapterRegistry // Constant field
 
 	// Mutable fields
 	isRunning bool
@@ -18,7 +21,7 @@ type Lobby struct {
 	players map[string]*Player
 }
 
-func (l *Lobby) Join(sessionId, name string) (string, string, string) {
+func (l *Lobby) Join(sessionId string, adapter neoroute.Adapter, name string) (string, string, string) {
 	if l.isRunning {
 		return "", "", util.ErrLobbyRunning
 	}
@@ -27,7 +30,10 @@ func (l *Lobby) Join(sessionId, name string) (string, string, string) {
 		return "", "", util.ErrNameTaken
 	}
 
-	p := l.addPlayer(l.newPlayerId(), sessionId, name)
+	p := l.addPlayer(l.newPlayerId(), name)
+
+	// Add player sessionId to adapter registry
+	l.adapterRegistry.Register(sessionId, adapter)
 
 	return p.id, p.token, ""
 }
@@ -47,7 +53,7 @@ func (l *Lobby) Ready(p *Player, ready bool) string {
 	return ""
 }
 
-func (l *Lobby) Reconnect(id string, sessionId string, playerToken string) string {
+func (l *Lobby) Reconnect(id string, sessionId string, adapter neoroute.Adapter, playerToken string) string {
 
 	p, ok := l.players[id]
 	if !ok {
@@ -67,18 +73,23 @@ func (l *Lobby) Reconnect(id string, sessionId string, playerToken string) strin
 	}
 
 	p.connected = true
-	p.sessionId = sessionId
+
+	// Add player sessionId to adapter registry
+	l.adapterRegistry.Register(sessionId, adapter)
 
 	return ""
 }
 
-func (l *Lobby) Leave(p *Player) string {
+func (l *Lobby) Leave(p *Player, sessionId string) string {
 
 	if l.isRunning {
 		return util.ErrLobbyRunning
 	}
 
 	l.removePlayer(p)
+
+	// Remove player sessionId from adapter registry
+	l.adapterRegistry.Unregister(sessionId)
 
 	return ""
 }

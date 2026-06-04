@@ -5,7 +5,6 @@ type Player struct {
 	name  string // Constant field
 	token string // Constant field
 
-	sessionId string
 	connected bool
 	kicked    bool
 	ready     bool

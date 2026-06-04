@@ -19,7 +19,7 @@ func Leave(c *neoroute.OkCtx[client.ClientData]) error {
 
 		return lobby.ModifyNeoOkPlayer(c, func(l *lobby.Lobby, p *lobby.Player) error {
 
-			err := l.Leave(p)
+			err := l.Leave(p, c.Session().Id())
 			if err != "" {
 				return c.RespondError(err)
 			}
@@ -27,6 +27,9 @@ func Leave(c *neoroute.OkCtx[client.ClientData]) error {
 			// Clear client data
 			cd.LobbyId = ""
 			cd.PlayerId = ""
+
+			// Send player info event
+			l.SendPlayerInfoEvent()
 
 			return c.RespondOk()
 		})

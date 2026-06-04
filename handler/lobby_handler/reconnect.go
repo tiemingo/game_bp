@@ -16,7 +16,7 @@ type ReconnectRequest struct {
 	PlayerToken string `msg:"playerToken"`
 }
 
-func Reconnect(c *neoroute.OkCtx[client.ClientData], req ReconnectRequest) error {
+func (h HandlerInfo) Reconnect(c *neoroute.OkCtx[client.ClientData], req ReconnectRequest) error {
 
 	return client.AccessData(&c.Ctx, func(cd *client.ClientData) error {
 
@@ -26,7 +26,12 @@ func Reconnect(c *neoroute.OkCtx[client.ClientData], req ReconnectRequest) error
 		}
 		return lobby.Modify(req.LobbyId, func(l *lobby.Lobby) error {
 
-			err := l.Reconnect(req.PlayerId, c.Session().Id(), req.PlayerToken)
+			adapter, adaptErr := h.T.Adapt(c.Session().Id())
+			if adaptErr != nil {
+				return c.RespondError(util.ErrInternalServerError)
+			}
+
+			err := l.Reconnect(req.PlayerId, c.Session().Id(), adapter, req.PlayerToken)
 			if err != "" {
 				return c.RespondError(err)
 			}

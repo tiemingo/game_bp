@@ -8,7 +8,7 @@ import (
 	"github.com/Liphium/neoroute"
 )
 
-func SetupWSRoutes() *neoroute.NeoRouter[client.ClientData] {
+func SetupWSRoutes(t *neoroute.WebSocketTransporter[client.ClientData]) *neoroute.NeoRouter[client.ClientData] {
 
 	// Create router
 	r := neoroute.NewNeoRouter[client.ClientData](neoroute.Config{
@@ -18,7 +18,7 @@ func SetupWSRoutes() *neoroute.NeoRouter[client.ClientData] {
 		},
 	})
 
-	SetupLobbyRoutes(r.Group("lobby"))
+	SetupLobbyRoutes(r.Group("lobby"), t)
 
 	return r
 }

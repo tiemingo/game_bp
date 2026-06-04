@@ -15,10 +15,9 @@ func (l *Lobby) newPlayerId() string {
 	}
 }
 
-func (l *Lobby) addPlayer(id, sessionId, name string) *Player {
+func (l *Lobby) addPlayer(id, name string) *Player {
 	p := &Player{
 		id:        id,
-		sessionId: sessionId,
 		name:      name,
 		connected: true,
 		token:     uuid.NewString(),
