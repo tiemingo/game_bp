@@ -27,5 +27,6 @@ type Command struct {
 	PauseIf   func(TimerStatus) bool // Used for CmdPauseIf
 	ResumeIf  func(TimerStatus) bool // Used for CmdResumeIf
 	RestartIf func(TimerStatus) bool // Used for CmdRestartIf
+	DoneChan  chan struct{}          // Used for CmdSkipIf, CmdPauseIf, CmdResumeIf, CmdRestartIf, closes when command is processed
 	ReplyChan chan TimerStatus       // Used for CmdGetTimerStatus
 }

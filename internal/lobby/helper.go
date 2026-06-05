@@ -1,6 +1,7 @@
 package lobby
 
 import (
+	"game_bp/internal/phase"
 	"game_bp/util"
 
 	"github.com/google/uuid"
@@ -48,6 +49,25 @@ func (l *Lobby) canChangeReady() string {
 	return util.ErrLobbyRunning
 }
 
+// shouldSkipPhase checks if phase should be ended prematurely.
+func (l *Lobby) shouldSkipPhase(ts phase.TimerStatus) bool {
+	if ts.CurrentPhase == PHASE_LOBBY {
+		return l.allPlayersReady() && len(l.players) >= l.minPlayers
+	}
+
+	// TODO: add other conditions for skipping phases if needed
+	return false
+}
+
 func isNameAllowed(name string) bool {
 	return len(name) >= 3 && len(name) <= 10
+}
+
+func (l *Lobby) allPlayersReady() bool {
+	for _, p := range l.players {
+		if !p.ready {
+			return false
+		}
+	}
+	return true
 }

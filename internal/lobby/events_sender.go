@@ -1,30 +1,42 @@
 package lobby
 
 import (
+	"game_bp/internal/phase"
 	"game_bp/util/logger"
 	"log/slog"
 )
 
-func (l *Lobby) SendPlayerInfoEvent() {
+func (l *Lobby) SendLobbyInfoEvent() {
 
-	players := []PlayerInfoPlayer{}
+	// Collect player info
+	players := []LobbyInfoPlayer{}
 	for _, p := range l.players {
-		players = append(players, PlayerInfoPlayer{
+		players = append(players, LobbyInfoPlayer{
 			Id:    p.id,
 			Name:  p.name,
 			Ready: p.ready,
 		})
 	}
-	ev, err := playerInfoSender(PlayerInfo{
-		Players: players,
+
+	// Get end timestamp
+	replyChan := make(chan phase.TimerStatus)
+	l.commandChan <- phase.Command{
+		Type:      phase.CmdGetTimerStatus,
+		ReplyChan: replyChan,
+	}
+	timerStatus := <-replyChan
+
+	ev, err := lobbyInfoSender(LobbyInfo{
+		EndTimer: timerStatus.EndTime.Unix(),
+		Players:  players,
 	})
 	if err != nil {
-		slog.Info("failed to create player info event", logger.Err(err), logger.LobbyId(l.id))
+		slog.Info("failed to create lobby info event", logger.Err(err), logger.LobbyId(l.id))
 		return
 	}
 	go func() {
 		if err := l.adapterRegistry.Broadcast(ev); err != nil {
-			slog.Info("failed to broadcast player info event", logger.Err(err), logger.LobbyId(l.id))
+			slog.Info("failed to broadcast lobby info event", logger.Err(err), logger.LobbyId(l.id))
 		}
 	}()
 }

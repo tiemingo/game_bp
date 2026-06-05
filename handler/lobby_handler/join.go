@@ -46,8 +46,8 @@ func (h HandlerInfo) Join(c *neoroute.ResCtx[client.ClientData, JoinResponse, *J
 			cd.LobbyId = req.LobbyId
 			cd.PlayerId = playerId
 
-			// Send player info event
-			l.SendPlayerInfoEvent()
+			// Send lobby info event
+			l.SendLobbyInfoEvent()
 
 			return c.Respond(JoinResponse{
 				PlayerId: playerId,

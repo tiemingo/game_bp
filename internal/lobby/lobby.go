@@ -12,7 +12,10 @@ type Lobby struct {
 	token           string                    // Constant field
 	phaseManager    *phase.PhaseManager       // Constant field
 	doneChan        chan struct{}             // Constant field
+	commandChan     chan<- phase.Command      // Constant field
 	adapterRegistry *neoroute.AdapterRegistry // Constant field
+	maxPlayers      int                       // Constant field
+	minPlayers      int                       // Constant field
 
 	// Mutable fields
 	isRunning bool
@@ -28,6 +31,10 @@ func (l *Lobby) Join(sessionId string, adapter neoroute.Adapter, name string) (s
 
 	if !l.isNameUnique(name) {
 		return "", "", util.ErrNameTaken
+	}
+
+	if len(l.players) >= l.maxPlayers {
+		return "", "", util.ErrLobbyFull
 	}
 
 	p := l.addPlayer(l.newPlayerId(), name)
@@ -49,6 +56,15 @@ func (l *Lobby) Ready(p *Player, ready bool) string {
 	}
 
 	p.ready = ready
+
+	// Skip phase if wanted
+	skipDoneChan := make(chan struct{})
+	l.commandChan <- phase.Command{
+		Type:     phase.CmdSkipIf,
+		DoneChan: skipDoneChan,
+		SkipIf:   l.shouldSkipPhase,
+	}
+	<-skipDoneChan
 
 	return ""
 }

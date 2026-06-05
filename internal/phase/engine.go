@@ -17,6 +17,7 @@ func (pm *PhaseManager) RunEngine() {
 
 			case CmdSkipIf:
 				if cmd.SkipIf(pm.getTimerStatus()) {
+
 					pm.stopAndDrain(phaseTimer)
 					if !pm.advancePhase(false) {
 						return
@@ -24,20 +25,24 @@ func (pm *PhaseManager) RunEngine() {
 					pm.startTime = time.Now().UTC()
 					phaseTimer = time.NewTimer(pm.remaining)
 				}
+				close(cmd.DoneChan)
 			case CmdPauseIf:
 				if cmd.PauseIf(pm.getTimerStatus()) {
 					pm.pauseTimer(phaseTimer)
 				}
+				close(cmd.DoneChan)
 
 			case CmdResumeIf:
 				if cmd.ResumeIf(pm.getTimerStatus()) {
 					phaseTimer = pm.resumeTimer()
 				}
+				close(cmd.DoneChan)
 
 			case CmdRestartIf:
 				if cmd.RestartIf(pm.getTimerStatus()) {
 					phaseTimer = pm.restartCurrentPhase(phaseTimer)
 				}
+				close(cmd.DoneChan)
 
 			case CmdGetTimerStatus:
 				cmd.ReplyChan <- pm.getTimerStatus()

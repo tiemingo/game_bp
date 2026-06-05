@@ -92,7 +92,7 @@ func (z GameStart) Msgsize() (s int) {
 }
 
 // DecodeMsg implements msgp.Decodable
-func (z *PlayerInfo) DecodeMsg(dc *msgp.Reader) (err error) {
+func (z *LobbyInfo) DecodeMsg(dc *msgp.Reader) (err error) {
 	var field []byte
 	_ = field
 	var zb0001 uint32
@@ -119,7 +119,7 @@ func (z *PlayerInfo) DecodeMsg(dc *msgp.Reader) (err error) {
 			if cap(z.Players) >= int(zb0002) {
 				z.Players = (z.Players)[:zb0002]
 			} else {
-				z.Players = make([]PlayerInfoPlayer, zb0002)
+				z.Players = make([]LobbyInfoPlayer, zb0002)
 			}
 			for za0001 := range z.Players {
 				var zb0003 uint32
@@ -175,7 +175,7 @@ func (z *PlayerInfo) DecodeMsg(dc *msgp.Reader) (err error) {
 }
 
 // EncodeMsg implements msgp.Encodable
-func (z *PlayerInfo) EncodeMsg(en *msgp.Writer) (err error) {
+func (z *LobbyInfo) EncodeMsg(en *msgp.Writer) (err error) {
 	// map header, size 1
 	// write "players"
 	err = en.Append(0x81, 0xa7, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x73)
@@ -224,7 +224,7 @@ func (z *PlayerInfo) EncodeMsg(en *msgp.Writer) (err error) {
 }
 
 // MarshalMsg implements msgp.Marshaler
-func (z *PlayerInfo) MarshalMsg(b []byte) (o []byte, err error) {
+func (z *LobbyInfo) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
 	// map header, size 1
 	// string "players"
@@ -246,7 +246,7 @@ func (z *PlayerInfo) MarshalMsg(b []byte) (o []byte, err error) {
 }
 
 // UnmarshalMsg implements msgp.Unmarshaler
-func (z *PlayerInfo) UnmarshalMsg(bts []byte) (o []byte, err error) {
+func (z *LobbyInfo) UnmarshalMsg(bts []byte) (o []byte, err error) {
 	var field []byte
 	_ = field
 	var zb0001 uint32
@@ -273,7 +273,7 @@ func (z *PlayerInfo) UnmarshalMsg(bts []byte) (o []byte, err error) {
 			if cap(z.Players) >= int(zb0002) {
 				z.Players = (z.Players)[:zb0002]
 			} else {
-				z.Players = make([]PlayerInfoPlayer, zb0002)
+				z.Players = make([]LobbyInfoPlayer, zb0002)
 			}
 			for za0001 := range z.Players {
 				var zb0003 uint32
@@ -330,7 +330,7 @@ func (z *PlayerInfo) UnmarshalMsg(bts []byte) (o []byte, err error) {
 }
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
-func (z *PlayerInfo) Msgsize() (s int) {
+func (z *LobbyInfo) Msgsize() (s int) {
 	s = 1 + 8 + msgp.ArrayHeaderSize
 	for za0001 := range z.Players {
 		s += 1 + 9 + msgp.StringPrefixSize + len(z.Players[za0001].Id) + 5 + msgp.StringPrefixSize + len(z.Players[za0001].Name) + 6 + msgp.BoolSize
@@ -339,7 +339,7 @@ func (z *PlayerInfo) Msgsize() (s int) {
 }
 
 // DecodeMsg implements msgp.Decodable
-func (z *PlayerInfoPlayer) DecodeMsg(dc *msgp.Reader) (err error) {
+func (z *LobbyInfoPlayer) DecodeMsg(dc *msgp.Reader) (err error) {
 	var field []byte
 	_ = field
 	var zb0001 uint32
@@ -386,7 +386,7 @@ func (z *PlayerInfoPlayer) DecodeMsg(dc *msgp.Reader) (err error) {
 }
 
 // EncodeMsg implements msgp.Encodable
-func (z PlayerInfoPlayer) EncodeMsg(en *msgp.Writer) (err error) {
+func (z LobbyInfoPlayer) EncodeMsg(en *msgp.Writer) (err error) {
 	// map header, size 3
 	// write "playerId"
 	err = en.Append(0x83, 0xa8, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x49, 0x64)
@@ -422,7 +422,7 @@ func (z PlayerInfoPlayer) EncodeMsg(en *msgp.Writer) (err error) {
 }
 
 // MarshalMsg implements msgp.Marshaler
-func (z PlayerInfoPlayer) MarshalMsg(b []byte) (o []byte, err error) {
+func (z LobbyInfoPlayer) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
 	// map header, size 3
 	// string "playerId"
@@ -438,7 +438,7 @@ func (z PlayerInfoPlayer) MarshalMsg(b []byte) (o []byte, err error) {
 }
 
 // UnmarshalMsg implements msgp.Unmarshaler
-func (z *PlayerInfoPlayer) UnmarshalMsg(bts []byte) (o []byte, err error) {
+func (z *LobbyInfoPlayer) UnmarshalMsg(bts []byte) (o []byte, err error) {
 	var field []byte
 	_ = field
 	var zb0001 uint32
@@ -486,7 +486,7 @@ func (z *PlayerInfoPlayer) UnmarshalMsg(bts []byte) (o []byte, err error) {
 }
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
-func (z PlayerInfoPlayer) Msgsize() (s int) {
+func (z LobbyInfoPlayer) Msgsize() (s int) {
 	s = 1 + 9 + msgp.StringPrefixSize + len(z.Id) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.BoolSize
 	return
 }

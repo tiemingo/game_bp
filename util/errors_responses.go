@@ -12,4 +12,5 @@ var (
 	ErrPlayerAlreadyInLobby   = "Player is already in a lobby."
 	ErrReadyStatusUnchanged   = "Ready status is already set to the given value."
 	ErrInternalServerError    = "An internal server error occurred."
+	ErrLobbyFull              = "Lobby is full."
 )

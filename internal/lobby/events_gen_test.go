@@ -123,7 +123,7 @@ func BenchmarkDecodeGameStart(b *testing.B) {
 }
 
 func TestMarshalUnmarshalPlayerInfo(t *testing.T) {
-	v := PlayerInfo{}
+	v := LobbyInfo{}
 	bts, err := v.MarshalMsg(nil)
 	if err != nil {
 		t.Fatal(err)
@@ -146,7 +146,7 @@ func TestMarshalUnmarshalPlayerInfo(t *testing.T) {
 }
 
 func BenchmarkMarshalMsgPlayerInfo(b *testing.B) {
-	v := PlayerInfo{}
+	v := LobbyInfo{}
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -155,7 +155,7 @@ func BenchmarkMarshalMsgPlayerInfo(b *testing.B) {
 }
 
 func BenchmarkAppendMsgPlayerInfo(b *testing.B) {
-	v := PlayerInfo{}
+	v := LobbyInfo{}
 	bts := make([]byte, 0, v.Msgsize())
 	bts, _ = v.MarshalMsg(bts[0:0])
 	b.SetBytes(int64(len(bts)))
@@ -167,7 +167,7 @@ func BenchmarkAppendMsgPlayerInfo(b *testing.B) {
 }
 
 func BenchmarkUnmarshalPlayerInfo(b *testing.B) {
-	v := PlayerInfo{}
+	v := LobbyInfo{}
 	bts, _ := v.MarshalMsg(nil)
 	b.ReportAllocs()
 	b.SetBytes(int64(len(bts)))
@@ -181,7 +181,7 @@ func BenchmarkUnmarshalPlayerInfo(b *testing.B) {
 }
 
 func TestEncodeDecodePlayerInfo(t *testing.T) {
-	v := PlayerInfo{}
+	v := LobbyInfo{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 
@@ -190,7 +190,7 @@ func TestEncodeDecodePlayerInfo(t *testing.T) {
 		t.Log("WARNING: TestEncodeDecodePlayerInfo Msgsize() is inaccurate")
 	}
 
-	vn := PlayerInfo{}
+	vn := LobbyInfo{}
 	err := msgp.Decode(&buf, &vn)
 	if err != nil {
 		t.Error(err)
@@ -205,7 +205,7 @@ func TestEncodeDecodePlayerInfo(t *testing.T) {
 }
 
 func BenchmarkEncodePlayerInfo(b *testing.B) {
-	v := PlayerInfo{}
+	v := LobbyInfo{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 	b.SetBytes(int64(buf.Len()))
@@ -219,7 +219,7 @@ func BenchmarkEncodePlayerInfo(b *testing.B) {
 }
 
 func BenchmarkDecodePlayerInfo(b *testing.B) {
-	v := PlayerInfo{}
+	v := LobbyInfo{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 	b.SetBytes(int64(buf.Len()))
@@ -236,7 +236,7 @@ func BenchmarkDecodePlayerInfo(b *testing.B) {
 }
 
 func TestMarshalUnmarshalPlayerInfoPlayer(t *testing.T) {
-	v := PlayerInfoPlayer{}
+	v := LobbyInfoPlayer{}
 	bts, err := v.MarshalMsg(nil)
 	if err != nil {
 		t.Fatal(err)
@@ -259,7 +259,7 @@ func TestMarshalUnmarshalPlayerInfoPlayer(t *testing.T) {
 }
 
 func BenchmarkMarshalMsgPlayerInfoPlayer(b *testing.B) {
-	v := PlayerInfoPlayer{}
+	v := LobbyInfoPlayer{}
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -268,7 +268,7 @@ func BenchmarkMarshalMsgPlayerInfoPlayer(b *testing.B) {
 }
 
 func BenchmarkAppendMsgPlayerInfoPlayer(b *testing.B) {
-	v := PlayerInfoPlayer{}
+	v := LobbyInfoPlayer{}
 	bts := make([]byte, 0, v.Msgsize())
 	bts, _ = v.MarshalMsg(bts[0:0])
 	b.SetBytes(int64(len(bts)))
@@ -280,7 +280,7 @@ func BenchmarkAppendMsgPlayerInfoPlayer(b *testing.B) {
 }
 
 func BenchmarkUnmarshalPlayerInfoPlayer(b *testing.B) {
-	v := PlayerInfoPlayer{}
+	v := LobbyInfoPlayer{}
 	bts, _ := v.MarshalMsg(nil)
 	b.ReportAllocs()
 	b.SetBytes(int64(len(bts)))
@@ -294,7 +294,7 @@ func BenchmarkUnmarshalPlayerInfoPlayer(b *testing.B) {
 }
 
 func TestEncodeDecodePlayerInfoPlayer(t *testing.T) {
-	v := PlayerInfoPlayer{}
+	v := LobbyInfoPlayer{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 
@@ -303,7 +303,7 @@ func TestEncodeDecodePlayerInfoPlayer(t *testing.T) {
 		t.Log("WARNING: TestEncodeDecodePlayerInfoPlayer Msgsize() is inaccurate")
 	}
 
-	vn := PlayerInfoPlayer{}
+	vn := LobbyInfoPlayer{}
 	err := msgp.Decode(&buf, &vn)
 	if err != nil {
 		t.Error(err)
@@ -318,7 +318,7 @@ func TestEncodeDecodePlayerInfoPlayer(t *testing.T) {
 }
 
 func BenchmarkEncodePlayerInfoPlayer(b *testing.B) {
-	v := PlayerInfoPlayer{}
+	v := LobbyInfoPlayer{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 	b.SetBytes(int64(buf.Len()))
@@ -332,7 +332,7 @@ func BenchmarkEncodePlayerInfoPlayer(b *testing.B) {
 }
 
 func BenchmarkDecodePlayerInfoPlayer(b *testing.B) {
-	v := PlayerInfoPlayer{}
+	v := LobbyInfoPlayer{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 	b.SetBytes(int64(buf.Len()))

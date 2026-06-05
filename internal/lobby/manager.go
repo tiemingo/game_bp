@@ -27,7 +27,7 @@ func CreateLobby(sessionId string, adapter neoroute.Adapter, name string) (strin
 
 	// Initialize phase manager
 	pi := phaseInfo{lobbyId: id}
-	phaseManager, doneChan, err := phase.NewPhaseManager(phase.Config{
+	phaseManager, doneChan, commandChan, err := phase.NewPhaseManager(phase.Config{
 		InitialPhase:    PHASE_LOBBY,
 		InitialDuration: PHASE_LOBBY_DURATION,
 		Phases: map[phase.Phase]func() (phase.Phase, time.Duration, bool){
@@ -44,8 +44,11 @@ func CreateLobby(sessionId string, adapter neoroute.Adapter, name string) (strin
 		id:              id,
 		token:           uuid.NewString(),
 		phaseManager:    phaseManager,
+		commandChan:     commandChan,
 		doneChan:        doneChan,
 		adapterRegistry: neoroute.NewAdapterRegistry(),
+		maxPlayers:      4, // TODO: change max players
+		minPlayers:      2, // TODO: change min players
 
 		players: make(map[string]*Player),
 	}

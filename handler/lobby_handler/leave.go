@@ -28,8 +28,8 @@ func Leave(c *neoroute.OkCtx[client.ClientData]) error {
 			cd.LobbyId = ""
 			cd.PlayerId = ""
 
-			// Send player info event
-			l.SendPlayerInfoEvent()
+			// Send lobby info event
+			l.SendLobbyInfoEvent()
 
 			return c.RespondOk()
 		})

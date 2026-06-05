@@ -21,8 +21,8 @@ func Ready(c *neoroute.OkCtx[client.ClientData], req ReadyRequest) error {
 			return c.RespondError(err)
 		}
 
-		// Send player info event
-		l.SendPlayerInfoEvent()
+		// Send lobby info event
+		l.SendLobbyInfoEvent()
 
 		return c.RespondOk()
 	})

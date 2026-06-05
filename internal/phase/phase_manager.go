@@ -28,23 +28,23 @@ type Config struct {
 }
 
 // NewPhaseManager initializes a new PhaseManager with the provided configuration.
-func NewPhaseManager(config Config) (*PhaseManager, chan struct{}, error) {
+func NewPhaseManager(config Config) (*PhaseManager, chan struct{}, chan<- Command, error) {
 
 	// Validation of the configuration
 	if len(config.Phases) == 0 {
-		return nil, nil, util.IErrUnsetPhases
+		return nil, nil, nil, util.IErrUnsetPhases
 	}
 
 	if config.InitialDuration <= 0 {
-		return nil, nil, util.IErrInvalidInitialDuration
+		return nil, nil, nil, util.IErrInvalidInitialDuration
 	}
 
 	if _, exists := config.Phases[config.InitialPhase]; !exists {
-		return nil, nil, util.IErrMissingInitialPhase
+		return nil, nil, nil, util.IErrMissingInitialPhase
 	}
 
 	if _, exists := config.Phases[""]; exists {
-		return nil, nil, util.IErrEmptyPhase
+		return nil, nil, nil, util.IErrEmptyPhase
 	}
 
 	// Set command buffer size with a default value
@@ -54,14 +54,15 @@ func NewPhaseManager(config Config) (*PhaseManager, chan struct{}, error) {
 	}
 
 	doneChan := make(chan struct{})
+	commandChan := make(chan Command, bufferSize)
 
 	return &PhaseManager{
-		controlChan:  make(chan Command, bufferSize),
+		controlChan:  commandChan,
 		currentPhase: config.InitialPhase,
 		duration:     config.InitialDuration,
 		doneChan:     doneChan,
 		phases:       config.Phases,
-	}, doneChan, nil
+	}, doneChan, commandChan, nil
 }
 
 // advancePhase runs the phase end func and sets the next phase and duration.
