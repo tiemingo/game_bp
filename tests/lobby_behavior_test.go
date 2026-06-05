@@ -5,8 +5,10 @@ import (
 	"game_bp/event_registry"
 	"game_bp/handler/lobby_handler"
 	"game_bp/internal/client"
+	"game_bp/internal/lobby"
 	"game_bp/util"
 	"testing"
+	"time"
 
 	"github.com/Liphium/neoroute"
 	"github.com/stretchr/testify/assert"
@@ -43,9 +45,10 @@ func TestLobbyBehavior(t *testing.T) {
 
 	handlerInfo := lobby_handler.HandlerInfo{
 		GetAdapterFunc: func(sessionId string) (neoroute.Adapter, error) {
-			if sessionId == creator.SessionId {
+			switch sessionId {
+			case creator.SessionId:
 				return creator.Adapter, nil
-			} else if sessionId == joiningPlayer.SessionId {
+			case joiningPlayer.SessionId:
 				return joiningPlayer.Adapter, nil
 			}
 			return nil, fmt.Errorf("adapter not found for session ID: %s", sessionId)
@@ -88,7 +91,17 @@ func TestLobbyBehavior(t *testing.T) {
 		assert.Empty(t, errMsg)
 		joiningPlayer.Id = resp.PlayerId
 		joiningPlayer.Token = resp.PlayerToken
+
+		// Verify that events are sent to both players
+		time.Sleep(100 * time.Millisecond)
+		events, err := creator.Adapter.(*neoroute.TestingAdapter).DrainEvents()
+		assert.Nil(t, err)
+		assert.Len(t, events, 1)
+		assert.Equal(t, "lobby_info", events[0].Name)
+		ev, err := neoroute.UnmarshalEventTesting[lobby.LobbyInfo](events[0].Data)
+		assert.Nil(t, err)
+		assert.Len(t, ev.Players, 2)
+		assert.Contains(t, []string{ev.Players[0].Name, ev.Players[1].Name}, creator.Name)
+		assert.Contains(t, []string{ev.Players[0].Name, ev.Players[1].Name}, joiningPlayer.Name)
 	})
-	_ = lobbyId
-	_ = lobbyToken
 }
