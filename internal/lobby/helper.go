@@ -71,3 +71,35 @@ func (l *Lobby) allPlayersReady() bool {
 	}
 	return true
 }
+
+func (l *Lobby) stopOrStartLobbyTimer(add bool) {
+
+	if len(l.players) == l.minPlayers && add {
+
+		// Start lobby timer
+		doneChan := make(chan struct{})
+		l.commandChan <- phase.Command{
+			Type: phase.CmdResumeIf,
+			ResumeIf: func(ts phase.TimerStatus) bool {
+				return ts.CurrentPhase == PHASE_LOBBY
+			},
+			DoneChan: doneChan,
+		}
+		<-doneChan
+		return
+	}
+
+	if len(l.players) < l.minPlayers && !add {
+		// Stop lobby timer
+		doneChan := make(chan struct{})
+		l.commandChan <- phase.Command{
+			Type: phase.CmdResetIf,
+			ResetIf: func(ts phase.TimerStatus) bool {
+				return ts.CurrentPhase == PHASE_LOBBY
+			},
+			DoneChan: doneChan,
+		}
+		<-doneChan
+		return
+	}
+}

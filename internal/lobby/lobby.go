@@ -42,6 +42,8 @@ func (l *Lobby) Join(sessionId string, adapter neoroute.Adapter, name string) (s
 	// Add player sessionId to adapter registry
 	l.adapterRegistry.Register(sessionId, adapter)
 
+	l.stopOrStartLobbyTimer(true)
+
 	return p.id, p.token, ""
 }
 
@@ -106,6 +108,8 @@ func (l *Lobby) Leave(p *Player, sessionId string) string {
 
 	// Remove player sessionId from adapter registry
 	l.adapterRegistry.Unregister(sessionId)
+
+	l.stopOrStartLobbyTimer(false)
 
 	return ""
 }

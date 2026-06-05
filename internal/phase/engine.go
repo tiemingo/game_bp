@@ -44,6 +44,12 @@ func (pm *PhaseManager) RunEngine() {
 				}
 				close(cmd.DoneChan)
 
+			case CmdResetIf:
+				if cmd.ResetIf(pm.getTimerStatus()) {
+					pm.resetTimer(phaseTimer)
+				}
+				close(cmd.DoneChan)
+
 			case CmdGetTimerStatus:
 				cmd.ReplyChan <- pm.getTimerStatus()
 				close(cmd.ReplyChan)

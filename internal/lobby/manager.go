@@ -62,6 +62,17 @@ func CreateLobby(sessionId string, adapter neoroute.Adapter, name string) (strin
 	// Start phase manager
 	go phaseManager.RunEngine()
 
+	// Stop and reset the timer
+	resetChan := make(chan struct{})
+	l.commandChan <- phase.Command{
+		Type: phase.CmdResetIf,
+		ResetIf: func(status phase.TimerStatus) bool {
+			return true
+		},
+		DoneChan: resetChan,
+	}
+	<-resetChan
+
 	addLobby(id, l)
 	return id, l.token, p.id, p.token, ""
 }

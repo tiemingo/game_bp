@@ -110,6 +110,14 @@ func (pm *PhaseManager) pauseTimer(timer *time.Timer) {
 	pm.isPaused = true
 }
 
+// resetTimer stops the timer and resets the remaining time.
+func (pm *PhaseManager) resetTimer(timer *time.Timer) {
+	pm.stopAndDrain(timer)
+
+	pm.remaining = pm.duration
+	pm.isPaused = true
+}
+
 // resumeTimer restarts the timer with the remaining time.
 func (pm *PhaseManager) resumeTimer() *time.Timer {
 	if !pm.isPaused {
