@@ -15,6 +15,9 @@ func (p *phaseInfo) phaseLobbyEnd() (phase.Phase, time.Duration, bool) {
 		slog.Debug("phase end lobby update", logger.Phase("lobby"), logger.LobbyId(p.lobbyId))
 
 		l.isRunning = true
+
+		// Send game start event
+		l.SendGameStartEvent()
 		return nil
 	})
 

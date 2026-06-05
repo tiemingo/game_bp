@@ -18,4 +18,7 @@ type PlayerInfoPlayer struct {
 	Ready bool   `msg:"ready"`
 }
 
+type GameStart struct{}
+
 var playerInfoSender = neoroute.Register[PlayerInfo](event_registry.EventReg, "player_info")
+var gameStartSender = neoroute.Register[GameStart](event_registry.EventReg, "game_start")

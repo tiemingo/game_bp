@@ -28,3 +28,17 @@ func (l *Lobby) SendPlayerInfoEvent() {
 		}
 	}()
 }
+
+func (l *Lobby) SendGameStartEvent() {
+
+	ev, err := gameStartSender(GameStart{})
+	if err != nil {
+		slog.Info("failed to create game start event", logger.Err(err), logger.LobbyId(l.id))
+		return
+	}
+	go func() {
+		if err := l.adapterRegistry.Broadcast(ev); err != nil {
+			slog.Info("failed to broadcast game start event", logger.Err(err), logger.LobbyId(l.id))
+		}
+	}()
+}
