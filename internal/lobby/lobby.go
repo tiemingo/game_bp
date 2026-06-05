@@ -109,3 +109,10 @@ func (l *Lobby) Leave(p *Player, sessionId string) string {
 
 	return ""
 }
+
+func (l *Lobby) Stop() {
+	l.commandChan <- phase.Command{
+		Type: phase.CmdStop,
+	}
+	<-l.doneChan
+}

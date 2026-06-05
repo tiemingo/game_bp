@@ -12,6 +12,7 @@ const (
 	CmdSkipIf
 	CmdRestartIf
 	CmdGetTimerStatus
+	CmdStop
 )
 
 type TimerStatus struct {
