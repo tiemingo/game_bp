@@ -184,9 +184,9 @@ func (z *JoinResponse) DecodeMsg(dc *msgp.Reader) (err error) {
 				return
 			}
 		case "tokenToken":
-			z.Token, err = dc.ReadString()
+			z.PlayerToken, err = dc.ReadString()
 			if err != nil {
-				err = msgp.WrapError(err, "Token")
+				err = msgp.WrapError(err, "PlayerToken")
 				return
 			}
 		default:
@@ -218,9 +218,9 @@ func (z JoinResponse) EncodeMsg(en *msgp.Writer) (err error) {
 	if err != nil {
 		return
 	}
-	err = en.WriteString(z.Token)
+	err = en.WriteString(z.PlayerToken)
 	if err != nil {
-		err = msgp.WrapError(err, "Token")
+		err = msgp.WrapError(err, "PlayerToken")
 		return
 	}
 	return
@@ -235,7 +235,7 @@ func (z JoinResponse) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.AppendString(o, z.PlayerId)
 	// string "tokenToken"
 	o = append(o, 0xaa, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e)
-	o = msgp.AppendString(o, z.Token)
+	o = msgp.AppendString(o, z.PlayerToken)
 	return
 }
 
@@ -264,9 +264,9 @@ func (z *JoinResponse) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				return
 			}
 		case "tokenToken":
-			z.Token, bts, err = msgp.ReadStringBytes(bts)
+			z.PlayerToken, bts, err = msgp.ReadStringBytes(bts)
 			if err != nil {
-				err = msgp.WrapError(err, "Token")
+				err = msgp.WrapError(err, "PlayerToken")
 				return
 			}
 		default:
@@ -283,6 +283,6 @@ func (z *JoinResponse) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z JoinResponse) Msgsize() (s int) {
-	s = 1 + 9 + msgp.StringPrefixSize + len(z.PlayerId) + 11 + msgp.StringPrefixSize + len(z.Token)
+	s = 1 + 9 + msgp.StringPrefixSize + len(z.PlayerId) + 11 + msgp.StringPrefixSize + len(z.PlayerToken)
 	return
 }

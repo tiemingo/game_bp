@@ -9,7 +9,9 @@ import (
 
 func SetupLobbyRoutes(r neoroute.Router[client.ClientData], t *neoroute.WebSocketTransporter[client.ClientData]) {
 	handlerInfo := lobby_handler.HandlerInfo{
-		T: t,
+		GetAdapterFunc: func(sessionId string) (neoroute.Adapter, error) {
+			return t.Adapt(sessionId)
+		},
 	}
 	neoroute.Route(r, "create", handlerInfo.Create)
 	neoroute.Route(r, "join", handlerInfo.Join)

@@ -26,7 +26,7 @@ func (h HandlerInfo) Reconnect(c *neoroute.OkCtx[client.ClientData], req Reconne
 		}
 		return lobby.Modify(req.LobbyId, func(l *lobby.Lobby) error {
 
-			adapter, adaptErr := h.T.Adapt(c.Session().Id())
+			adapter, adaptErr := h.GetAdapterFunc(c.Session().Id())
 			if adaptErr != nil {
 				return c.RespondError(util.ErrInternalServerError)
 			}

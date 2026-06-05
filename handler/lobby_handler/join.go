@@ -17,8 +17,8 @@ type JoinRequest struct {
 }
 
 type JoinResponse struct {
-	PlayerId string `msg:"playerId"`
-	Token    string `msg:"tokenToken"`
+	PlayerId    string `msg:"playerId"`
+	PlayerToken string `msg:"tokenToken"`
 }
 
 func (h HandlerInfo) Join(c *neoroute.ResCtx[client.ClientData, JoinResponse, *JoinResponse], req JoinRequest) error {
@@ -31,7 +31,7 @@ func (h HandlerInfo) Join(c *neoroute.ResCtx[client.ClientData, JoinResponse, *J
 
 		return lobby.Modify(req.LobbyId, func(l *lobby.Lobby) error {
 
-			adapter, adaptErr := h.T.Adapt(c.Session().Id())
+			adapter, adaptErr := h.GetAdapterFunc(c.Session().Id())
 			if adaptErr != nil {
 				return c.RespondError(util.ErrInternalServerError)
 			}
@@ -50,8 +50,8 @@ func (h HandlerInfo) Join(c *neoroute.ResCtx[client.ClientData, JoinResponse, *J
 			l.SendLobbyInfoEvent()
 
 			return c.Respond(JoinResponse{
-				PlayerId: playerId,
-				Token:    playerToken,
+				PlayerId:    playerId,
+				PlayerToken: playerToken,
 			})
 		})
 	})

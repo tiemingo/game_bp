@@ -145,10 +145,10 @@ func (z *CreateResponse) DecodeMsg(dc *msgp.Reader) (err error) {
 				err = msgp.WrapError(err, "PlayerId")
 				return
 			}
-		case "tokenToken":
-			z.Token, err = dc.ReadString()
+		case "playerToken":
+			z.PlayerToken, err = dc.ReadString()
 			if err != nil {
-				err = msgp.WrapError(err, "Token")
+				err = msgp.WrapError(err, "PlayerToken")
 				return
 			}
 		default:
@@ -195,14 +195,14 @@ func (z *CreateResponse) EncodeMsg(en *msgp.Writer) (err error) {
 		err = msgp.WrapError(err, "PlayerId")
 		return
 	}
-	// write "tokenToken"
-	err = en.Append(0xaa, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e)
+	// write "playerToken"
+	err = en.Append(0xab, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x54, 0x6f, 0x6b, 0x65, 0x6e)
 	if err != nil {
 		return
 	}
-	err = en.WriteString(z.Token)
+	err = en.WriteString(z.PlayerToken)
 	if err != nil {
-		err = msgp.WrapError(err, "Token")
+		err = msgp.WrapError(err, "PlayerToken")
 		return
 	}
 	return
@@ -221,9 +221,9 @@ func (z *CreateResponse) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "playerId"
 	o = append(o, 0xa8, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x49, 0x64)
 	o = msgp.AppendString(o, z.PlayerId)
-	// string "tokenToken"
-	o = append(o, 0xaa, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e)
-	o = msgp.AppendString(o, z.Token)
+	// string "playerToken"
+	o = append(o, 0xab, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x54, 0x6f, 0x6b, 0x65, 0x6e)
+	o = msgp.AppendString(o, z.PlayerToken)
 	return
 }
 
@@ -263,10 +263,10 @@ func (z *CreateResponse) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				err = msgp.WrapError(err, "PlayerId")
 				return
 			}
-		case "tokenToken":
-			z.Token, bts, err = msgp.ReadStringBytes(bts)
+		case "playerToken":
+			z.PlayerToken, bts, err = msgp.ReadStringBytes(bts)
 			if err != nil {
-				err = msgp.WrapError(err, "Token")
+				err = msgp.WrapError(err, "PlayerToken")
 				return
 			}
 		default:
@@ -283,6 +283,6 @@ func (z *CreateResponse) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *CreateResponse) Msgsize() (s int) {
-	s = 1 + 8 + msgp.StringPrefixSize + len(z.LobbyId) + 11 + msgp.StringPrefixSize + len(z.LobbyToken) + 9 + msgp.StringPrefixSize + len(z.PlayerId) + 11 + msgp.StringPrefixSize + len(z.Token)
+	s = 1 + 8 + msgp.StringPrefixSize + len(z.LobbyId) + 11 + msgp.StringPrefixSize + len(z.LobbyToken) + 9 + msgp.StringPrefixSize + len(z.PlayerId) + 12 + msgp.StringPrefixSize + len(z.PlayerToken)
 	return
 }

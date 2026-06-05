@@ -109,6 +109,12 @@ func (z *LobbyInfo) DecodeMsg(dc *msgp.Reader) (err error) {
 			return
 		}
 		switch msgp.UnsafeString(field) {
+		case "endTimer":
+			z.EndTimer, err = dc.ReadInt64()
+			if err != nil {
+				err = msgp.WrapError(err, "EndTimer")
+				return
+			}
 		case "players":
 			var zb0002 uint32
 			zb0002, err = dc.ReadArrayHeader()
@@ -176,9 +182,19 @@ func (z *LobbyInfo) DecodeMsg(dc *msgp.Reader) (err error) {
 
 // EncodeMsg implements msgp.Encodable
 func (z *LobbyInfo) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 1
+	// map header, size 2
+	// write "endTimer"
+	err = en.Append(0x82, 0xa8, 0x65, 0x6e, 0x64, 0x54, 0x69, 0x6d, 0x65, 0x72)
+	if err != nil {
+		return
+	}
+	err = en.WriteInt64(z.EndTimer)
+	if err != nil {
+		err = msgp.WrapError(err, "EndTimer")
+		return
+	}
 	// write "players"
-	err = en.Append(0x81, 0xa7, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x73)
+	err = en.Append(0xa7, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x73)
 	if err != nil {
 		return
 	}
@@ -226,9 +242,12 @@ func (z *LobbyInfo) EncodeMsg(en *msgp.Writer) (err error) {
 // MarshalMsg implements msgp.Marshaler
 func (z *LobbyInfo) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 1
+	// map header, size 2
+	// string "endTimer"
+	o = append(o, 0x82, 0xa8, 0x65, 0x6e, 0x64, 0x54, 0x69, 0x6d, 0x65, 0x72)
+	o = msgp.AppendInt64(o, z.EndTimer)
 	// string "players"
-	o = append(o, 0x81, 0xa7, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x73)
+	o = append(o, 0xa7, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x73)
 	o = msgp.AppendArrayHeader(o, uint32(len(z.Players)))
 	for za0001 := range z.Players {
 		// map header, size 3
@@ -263,6 +282,12 @@ func (z *LobbyInfo) UnmarshalMsg(bts []byte) (o []byte, err error) {
 			return
 		}
 		switch msgp.UnsafeString(field) {
+		case "endTimer":
+			z.EndTimer, bts, err = msgp.ReadInt64Bytes(bts)
+			if err != nil {
+				err = msgp.WrapError(err, "EndTimer")
+				return
+			}
 		case "players":
 			var zb0002 uint32
 			zb0002, bts, err = msgp.ReadArrayHeaderBytes(bts)
@@ -331,7 +356,7 @@ func (z *LobbyInfo) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *LobbyInfo) Msgsize() (s int) {
-	s = 1 + 8 + msgp.ArrayHeaderSize
+	s = 1 + 9 + msgp.Int64Size + 8 + msgp.ArrayHeaderSize
 	for za0001 := range z.Players {
 		s += 1 + 9 + msgp.StringPrefixSize + len(z.Players[za0001].Id) + 5 + msgp.StringPrefixSize + len(z.Players[za0001].Name) + 6 + msgp.BoolSize
 	}

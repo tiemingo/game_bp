@@ -15,10 +15,10 @@ type CreateRequest struct {
 }
 
 type CreateResponse struct {
-	LobbyId    string `msg:"lobbyId"`
-	LobbyToken string `msg:"lobbyToken"`
-	PlayerId   string `msg:"playerId"`
-	Token      string `msg:"tokenToken"`
+	LobbyId     string `msg:"lobbyId"`
+	LobbyToken  string `msg:"lobbyToken"`
+	PlayerId    string `msg:"playerId"`
+	PlayerToken string `msg:"playerToken"`
 }
 
 func (h HandlerInfo) Create(c *neoroute.ResCtx[client.ClientData, CreateResponse, *CreateResponse], req CreateRequest) error {
@@ -30,7 +30,7 @@ func (h HandlerInfo) Create(c *neoroute.ResCtx[client.ClientData, CreateResponse
 			return c.RespondError(util.ErrPlayerAlreadyInLobby)
 		}
 
-		adapter, adaptErr := h.T.Adapt(c.Session().Id())
+		adapter, adaptErr := h.GetAdapterFunc(c.Session().Id())
 		if adaptErr != nil {
 			return c.RespondError(util.ErrInternalServerError)
 		}
@@ -46,10 +46,10 @@ func (h HandlerInfo) Create(c *neoroute.ResCtx[client.ClientData, CreateResponse
 		cd.PlayerId = playerId
 
 		return c.Respond(CreateResponse{
-			LobbyId:    lobbyId,
-			LobbyToken: lobbyToken,
-			PlayerId:   playerId,
-			Token:      playerToken,
+			LobbyId:     lobbyId,
+			LobbyToken:  lobbyToken,
+			PlayerId:    playerId,
+			PlayerToken: playerToken,
 		})
 	})
 }
